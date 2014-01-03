@@ -28,7 +28,14 @@ class CoursesController extends BaseController {
     public function show($id) {
         //show the selected course page
         $course = $this->course->whereId($id)->first();
-        return View::make('courses.show', ['course' => $course]);
+        //check if user is enroled
+        if ($course->users->contains(Auth::user()->id)) {
+            //if user is enroled show course page
+            return View::make('courses.show', ['course' => $course]);
+        } else {
+            //if user is not enroled show enrolment page
+            return View::make('courses.enrol');
+        }
     }
 
     public function create() {
