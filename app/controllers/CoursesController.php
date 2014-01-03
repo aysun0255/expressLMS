@@ -56,6 +56,7 @@ class CoursesController extends BaseController {
             }
             $this->course->name = Input::get('name');
             $this->course->description = Input::get('description');
+            $this->category_id = Input::get('category');
             $this->course->save();
             return View::make('pages.message', ['success' => 'You have successfully created new course!']);
         } else {
@@ -92,6 +93,7 @@ class CoursesController extends BaseController {
             $course = $this->course->whereId($id)->first();
             $course->name = Input::get('name');
             $course->description = Input::get('description');
+            $course->category_id = Input::get('category');
             $course->save();
             return View::make('pages.message', ['success' => 'Your changes have been saved!']);
         } else {
