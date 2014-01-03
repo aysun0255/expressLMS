@@ -38,7 +38,7 @@
             ?>
             @if($canEditUsers =='yes')
 
-            <a href ="{{url('users/'.$user->username.'/edit')}}" class ="btn btn-info">Edit</a>
+            <a href ="{{route('users.edit', $user->username)}}" class ="btn btn-info">Edit</a>
             @endif
             @if($canDeleteUsers =='yes')
 
