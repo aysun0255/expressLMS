@@ -34,7 +34,7 @@ class CoursesController extends BaseController {
             return View::make('courses.show', ['course' => $course]);
         } else {
             //if user is not enroled show enrolment page
-            return View::make('courses.enrol');
+            return View::make('courses.enrol', ['course' => $course]);
         }
     }
 
@@ -114,5 +114,16 @@ class CoursesController extends BaseController {
         return View::make('pages.message', ['success' => 'You have deleted selected course!']);
     }
 
+    /*
+     * Enrol user to a course.
+     */
+    public function enrol(){
+        $courseId = Input::get('course_id');
+        $course = $this->course->whereId($courseId)->first();
+        $course->users()->attach(Auth::user()->id);
+        //Redirect to course page
+        return Redirect::route('courses.show',$courseId);
+        
+    }
 }
 
