@@ -19,6 +19,8 @@
         <a href ="#">Add file</a>
         <a href ="#">Add homework</a>
         <a href ="#">Add test</a>
+        <a href ="#">Add url</a>
+        <a href ="#">Delete</a>
     </div>
     {{$lesson->name}}
     </div>
