@@ -32,6 +32,7 @@ Route::group(array('before' => 'activity'), function() {
             Route::get('/logout', array('as' => 'logout', 'uses' => 'AuthController@logout'));
             Route::get('/home', array('as' => 'home', 'uses' => 'PagesController@home'));
             Route::resource('courses', 'CoursesController');
+            Route::post('courses/{id}/enrol', array('as' => 'courses.enrol', 'uses' => 'CoursesController@enrol'));
             Route::resource('courses.lessons', 'CourseLessonsController');
         }
 );
