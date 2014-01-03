@@ -6,6 +6,7 @@
     </br>
     <div class="right">
         <a href ="#">Add lesson</a>
+        <a href ="#">Edit course</a>
     </div>
     {{$course->description}}
     </br>
