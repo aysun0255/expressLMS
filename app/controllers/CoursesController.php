@@ -117,13 +117,14 @@ class CoursesController extends BaseController {
     /*
      * Enrol user to a course.
      */
-    public function enrol(){
+
+    public function enrol() {
         $courseId = Input::get('course_id');
         $course = $this->course->whereId($courseId)->first();
         $course->users()->attach(Auth::user()->id);
         //Redirect to course page
-        return Redirect::route('courses.show',$courseId);
-        
+        return Redirect::route('courses.show', $courseId);
     }
+
 }
 
