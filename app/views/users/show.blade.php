@@ -26,7 +26,7 @@
         ?>
         Courses:
         @foreach($courses as $course)
-        {{$course->name}}
+        <a href ="{{route('courses.show', $course->id)}}">{{$course->name}}</a>
         @endforeach
         </br>
         <div class='right'>
