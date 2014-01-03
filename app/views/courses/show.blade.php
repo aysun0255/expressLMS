@@ -6,7 +6,7 @@
     </br>
     <div class="right">
         <a href ="#">Add lesson</a>
-        <a href ="#">Edit course</a>
+        <a href ="{{route('courses.edit', $course->id)}}">Edit course</a>
     </div>
     {{$course->description}}
     </br>
