@@ -14,7 +14,7 @@
         {{ HTML::script('js/bootstrap-datepicker.js') }}
         {{ HTML::style('css/datepicker.css');}}
         {{ HTML::style('css/bootstrap-glyphicons.css');}}
-      <title>Express LMS</title>
+        <title>Express LMS</title>
     </head>
     <body>
         <header id="MainHeader"><h1>Express LMS</h1></header>
@@ -34,6 +34,9 @@
                             <li class="active"><i class="icon-home icon-white"></i>{{link_to_route('home','Home')}}</li>
                             <li>{{link_to_route('users.index','Users')}}</li>
                             <li><a href="#contact">Contact</a></li>
+                            <?php
+                            $courses = Course::all();
+                            ?>
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Dropdown <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
@@ -41,9 +44,10 @@
                                     <li><a href="#">Another action</a></li>
                                     <li><a href="#">Something else here</a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-header">Nav header</li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li><a href="#">One more separated link</a></li>
+                                    <li class="dropdown-header">Courses</li>
+                                    @foreach($courses as $course)
+                                    <li><a href="#">{{$course->name}}</a></li>
+                                    @endforeach
                                 </ul>
                             </li>
                         </ul>
@@ -72,6 +76,6 @@
                 <p class="text-muted">Powered by Express LMS.</p>
             </div>
         </div>
-     
+
     </body>
 </html>
