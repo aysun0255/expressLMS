@@ -13,5 +13,8 @@
     </div>
     @endforeach
     </div>
+    {{$courses->links()}}
+    
+    <center><a href="{{route('courses.create')}}">Add new course</a></center>
         </div>
 @stop
