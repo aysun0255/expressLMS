@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Edit Course</h1>
-    {{Form::open(array('route'=>'courses.store','class' => 'form-signin'))}}
+    {{Form::model($course,array('route'=>array('courses.update',$course->id), 'method' =>'put'))}}
         {{Form::label('name','Course Name:'),
         Form::input('text','name')}}
         {{$errors->first('name');}}
@@ -11,6 +11,6 @@
         Form::textarea('description')}}
         {{$errors->first('description');}}
         </br>
-        {{Form::submit('Create Course',['type' => 'button','class' => 'btn btn-lg btn-primary btn-block'])}}
+        {{Form::submit('Edit Course',['type' => 'button','class' => 'btn btn-lg btn-primary btn-block'])}}
     {{Form::close()}}
 @stop
