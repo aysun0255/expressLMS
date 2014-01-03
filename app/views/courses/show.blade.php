@@ -7,6 +7,7 @@
     <div class="right">
         <a href ="#">Add lesson</a>
         <a href ="{{route('courses.edit', $course->id)}}">Edit course</a>
+        <a href ="#">Delete course</a>
     </div>
     {{$course->description}}
     </br>
