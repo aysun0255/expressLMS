@@ -18,7 +18,7 @@ class Course extends Eloquent {
     ];
 
     public function users() {
-        return $this->hasMany('User');
+        return $this->belongsToMany('User');
     }
 
     public function lessons() {
