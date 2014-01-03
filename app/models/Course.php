@@ -10,6 +10,12 @@ class Course extends Eloquent {
      * @var string
      */
     protected $table = 'courses';
+    
+    //Default validation rules
+    public static $rules = [
+        'name' => 'required|min:3',
+        'description' => 'required|between:3,500',
+    ];
 
     public function users() {
         return $this->hasMany('User');
@@ -18,5 +24,20 @@ class Course extends Eloquent {
     public function lessons() {
         return $this->hasMany('Lesson');
     }
+    
+        public function isValid($data, $rules = 0) {
+        //Check for using custom rules
+        if ($rules == 0) {
+            $rules = static::$rules;
+        }
+        $validation = Validator::make($data, $rules);
+        if ($validation->passes()) {
 
+            return true;
+        }
+        $this->errors = $validation->messages();
+        return false;
+    }
+    
+    
 }
