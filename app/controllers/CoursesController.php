@@ -21,7 +21,7 @@ class CoursesController extends BaseController {
 
     public function index() {
         // list of all courses
-        $courses = $this->course->all();
+        $courses = $this->course->paginate(2);
         return View::make('courses.index', ['courses' => $courses]);
     }
 
@@ -99,6 +99,12 @@ class CoursesController extends BaseController {
         } else {
             return View::make('pages.message', ['error' => 'You dont have permission to edit this course!']);
         }
+    }
+
+    public function destroy($courseId) {
+        $course = $this->course->whereId($courseId)->first();
+        $course->delete();
+        return View::make('pages.message', ['success' => 'You have deleted selected course!']);
     }
 
 }
