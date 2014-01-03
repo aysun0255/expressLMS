@@ -50,6 +50,10 @@ class CoursesController extends BaseController {
         $canCreateCourse = $user->whereId(Auth::user()->id)->first()->usergroup->can_create_course;
         //Check for users permission to create course
         if ($canCreateCourse == 'yes') {
+            $input = Input::all();
+            if (!$this->course->isValid($input)) {
+                return Redirect::back()->withInput()->withErrors($this->course->errors);
+            }
             $this->course->name = Input::get('name');
             $this->course->description = Input::get('description');
             $this->course->save();
@@ -81,6 +85,10 @@ class CoursesController extends BaseController {
         $canEditCourse = $user->whereId(Auth::user()->id)->first()->usergroup->can_edit_courses;
         //Check for users permission to edit course
         if ($canEditCourse == 'yes') {
+            $input = Input::all();
+            if (!$this->course->isValid($input)) {
+                return Redirect::back()->withInput()->withErrors($this->course->errors);
+            }
             $course = $this->course->whereId($id)->first();
             $course->name = Input::get('name');
             $course->description = Input::get('description');
