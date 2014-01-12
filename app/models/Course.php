@@ -21,8 +21,12 @@ class Course extends Eloquent {
         return $this->belongsToMany('User');
     }
 
-    public function lessons() {
-        return $this->hasMany('Lesson');
+    public function sections() {
+        return $this->hasMany('Section');
+    }
+    
+    public function category() {
+        return $this->belongsTo('CourseCategory');
     }
     
         public function isValid($data, $rules = 0) {

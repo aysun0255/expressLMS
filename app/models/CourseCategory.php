@@ -11,4 +11,7 @@ class CourseCategory extends Eloquent {
      */
     protected $table = 'course_categories';
 
+     public function courses() {
+        return $this->hasMany('Course');
+    }
 }
