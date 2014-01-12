@@ -14,5 +14,10 @@ class BaseController extends Controller {
 			$this->layout = View::make($this->layout);
 		}
 	}
+        //Check for user permissions
+        public function hasPermission($userId,$permission){
+        $user = new User;
+        return $user->whereId($userId)->first()->usergroup->$permission;
+        }
 
 }

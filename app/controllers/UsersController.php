@@ -49,9 +49,8 @@ class UsersController extends BaseController {
 
     public function edit($username) {
         //show user edit form
-        //get logged user usergroup and check for usergroup permissions
-        $usergroupId = Auth::user()->usergroup_id;
-        $canEditUsers = Usergroup::whereId($usergroupId)->first()->can_edit_users;
+        //check for user permissions
+        $canEditUsers = $this->hasPermission(Auth::user()->id,'can_edit_users');
         if (Auth::user()->username == $username || $canEditUsers == 'yes') {
             // Locate the model and store it in a variable:
             $user = $this->user->whereUsername($username)->first();

@@ -29,7 +29,7 @@ class CoursesController extends BaseController {
         //show the selected course page
         $course = $this->course->whereId($id)->first();
         //check if user is enroled
-        if ($course->users->contains(Auth::user()->id)) {
+        if ($course->users->contains(Auth::user()->id) || ($course->allow_guest_access == 'yes' && $course->use_key == 'no')) {
             //if user is enroled show course page
             return View::make('courses.show', ['course' => $course]);
         } else {
@@ -40,8 +40,7 @@ class CoursesController extends BaseController {
 
     public function create() {
         //Get info for user permission for creating a new course
-        $user = new User;
-        $canCreateCourse = $user->whereId(Auth::user()->id)->first()->usergroup->can_create_course;
+        $canCreateCourse = $this->hasPermission(Auth::user()->id,'can_create_course');
         //Check for users permission to create course
         if ($canCreateCourse == 'yes') {
             //If user have permission show create form
@@ -53,8 +52,7 @@ class CoursesController extends BaseController {
 
     public function store() {
         //Get info for user permission for creating a new course
-        $user = new User;
-        $canCreateCourse = $user->whereId(Auth::user()->id)->first()->usergroup->can_create_course;
+        $canCreateCourse = $this->hasPermission(Auth::user()->id,'can_create_course');;
         //Check for users permission to create course
         if ($canCreateCourse == 'yes') {
             $input = Input::all();
@@ -63,7 +61,10 @@ class CoursesController extends BaseController {
             }
             $this->course->name = Input::get('name');
             $this->course->description = Input::get('description');
-            $this->category_id = Input::get('category');
+            $this->course->course_category_id = Input::get('category');
+            $this->course->allow_guest_access = Input::get('allow_guest_access');
+            $this->course->use_key = Input::get('use_key');
+            $this->course->enrolment_key = Input::get('enrolment_key');
             $this->course->save();
             return View::make('pages.message', ['success' => 'You have successfully created new course!']);
         } else {
@@ -73,9 +74,8 @@ class CoursesController extends BaseController {
 
     public function edit($id) {
         //show user edit form
-        //get logged user usergroup and check for usergroup permissions
-        $usergroupId = Auth::user()->usergroup_id;
-        $canEditCourses = Usergroup::whereId($usergroupId)->first()->can_edit_courses;
+        //check for user permissions
+        $canEditCourses = $this->hasPermission(Auth::user()->id,'can_edit_courses');;
         if ($canEditCourses == 'yes') {
             // Locate the model and store it in a variable:
             $course = $this->course->whereId($id)->first();
@@ -89,8 +89,7 @@ class CoursesController extends BaseController {
 
     public function update($id) {
         //Get info for user permission for editing a course
-        $user = new User;
-        $canEditCourse = $user->whereId(Auth::user()->id)->first()->usergroup->can_edit_courses;
+        $canEditCourse = $this->hasPermission(Auth::user()->id,'can_edit_courses');
         //Check for users permission to edit course
         if ($canEditCourse == 'yes') {
             $input = Input::all();
@@ -100,7 +99,10 @@ class CoursesController extends BaseController {
             $course = $this->course->whereId($id)->first();
             $course->name = Input::get('name');
             $course->description = Input::get('description');
-            $course->category_id = Input::get('category');
+            $course->course_category_id = Input::get('category');
+            $course->allow_guest_access = Input::get('allow_guest_access');
+            $course->use_key = Input::get('use_key');
+            $course->enrolment_key = Input::get('enrolment_key');
             $course->save();
             return View::make('pages.message', ['success' => 'Your changes have been saved!']);
         } else {
@@ -121,9 +123,13 @@ class CoursesController extends BaseController {
     public function enrol() {
         $courseId = Input::get('course_id');
         $course = $this->course->whereId($courseId)->first();
-        $course->users()->attach(Auth::user()->id);
-        //Redirect to course page
-        return Redirect::route('courses.show', $courseId);
+        if (($course->use_key == 'yes' && Input::get('enrolment_key') == $course->enrolment_key) || $course->use_key == 'no') {
+            $course->users()->attach(Auth::user()->id);
+            //Redirect to course page
+            return Redirect::route('courses.show', $courseId);
+        } else {
+            return Redirect::back()->withErrors('You have entered wrong enrolment key!');
+        }
     }
 
 }
