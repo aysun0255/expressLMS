@@ -4,6 +4,8 @@
 <div class="well">
     <div class="container">
         <center> 
+            <h3><b>{{$course->name}}</b></h3>
+            </br>
             @if($course->allow_self_enrolment == 'yes')
             {{Form::open(array('route' => array('courses.enrol', $course->id),'method'=>'post','style' =>'display:inline;'))}}
                 @if($course->use_key == 'yes')

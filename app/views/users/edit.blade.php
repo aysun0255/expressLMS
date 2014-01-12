@@ -1,8 +1,10 @@
 @extends('layouts.master')
 
 @section('content')
-    <h1>{{$title}}</h1>
+    <center><h1>{{$title}}</h1></center>
     {{Form::model($user,array('route'=>'users.updateInfo'))}}
+    <div class="col-xs-6" style="border:1px solid;">
+        <center>
     <h4>User Settings</h4>
     <?php $avatar = Avatar::whereId($user->avatar_id)->first();?>
     <a href="{{URL::route('avatars')}}">
@@ -18,6 +20,10 @@
         Form::input('password','password')}}
         {{$errors->first('password');}}
         </br>
+        </center>
+        </div>
+    <div class="col-xs-6" style="border:1px solid;">
+        <center>
         <h4>Personal Information</h4>
         </br>
         {{Form::label('first_name','First Name:'),
@@ -43,9 +49,15 @@ $(function() {
 </script>
         </br>
         {{Form::label('about_me','About Me:'),
-        Form::input('textarea','about_me')}}
+        Form::textarea('about_me')}}
         {{$errors->first('about_me');}}
         </br>
+        </center>
+    </div>
+    <div class="clearfix"></div>
+    </br>
+    <div style="border:1px solid;">
+    <center>
         <h4>Social Profiles</h4>
         </br>
         {{Form::label('website','Website:'),
@@ -75,5 +87,7 @@ $(function() {
         {{Form::submit('Update Profile',['type' => 'button','class' => 'btn btn-lg btn-primary btn-block']),
         Form::input('hidden','username',$user->username),
         Form::input('hidden','user_id',$user->id)}}
+    </center>
+    </div>
     {{Form::close()}}
 @stop
