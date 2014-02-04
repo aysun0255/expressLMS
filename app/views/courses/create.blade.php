@@ -2,17 +2,17 @@
 
 @section('content')
     <h1>Create New Course</h1>
-    {{Form::open(array('route'=>'courses.store','class' => 'form-signin'))}}
+    {{Form::open(array('route'=>'courses.store'))}}
         {{Form::label('name','Course Name:'),
-        Form::input('text','name')}}
+        Form::input('text','name',null,['class' => 'form-control'])}}
         {{$errors->first('name');}}
         </br>
         {{Form::label('description','Description:'),
-        Form::textarea('description')}}
+        Form::textarea('description',null,['class' => 'form-control'])}}
         {{$errors->first('description');}}
         </br>
         {{Form::label('category','Category:'),
-        Form::select('category',array('not' => 'Not Selected',CourseCategory::lists('name', 'id')))}}
+        Form::select('category',array('not' => 'Not Selected',CourseCategory::lists('name', 'id')),['class' => 'form-control'])}}
         {{$errors->first('category');}}
         </br>
         {{Form::label('allow_guest_access','Allow guest access:'),
@@ -26,7 +26,7 @@
         {{$errors->first('use_key');}}
         </br>
         {{Form::label('enrolment_key','Enrolment key:'),
-        Form::text('enrolment_key')}}
+        Form::text('enrolment_key',null,['class' => 'form-control'])}}
         {{$errors->first('enrolment_key');}}
         </br>
         {{Form::submit('Create Course',['type' => 'button','class' => 'btn btn-lg btn-primary btn-block'])}}

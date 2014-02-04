@@ -2,19 +2,28 @@
 
 @section('content')
 <div class="well">
-    <div class="container">
     <h1>List Of all Courses</h1>
-    
+
     @foreach($courses as $course)
-    <div class="alert alert-info">
-        <a href="{{ route('courses.show', $course->id) }}"><h3>{{$course->name}}</h3></a>
-        </br>
-        {{$course->description}}
-    </div>
-    @endforeach
-    </div>
-    {{$courses->links()}}
-    
-    <center><a href="{{route('courses.create')}}">Add new course</a></center>
+    <div class="offer offer-default">
+        <div class="shape">
+            <div class="shape-text"> course </div>
         </div>
-@stop
+        <div class="offer-content">
+            <h3 class="lead"> <a href="{{ route('courses.show', $course->id) }}">{{$course->name}}</a></h3>
+
+            <div class="right">
+                {{$course->description}}
+
+            </div>
+
+            </br>
+
+        </div></div>
+        @endforeach
+
+        {{$courses->links()}}
+
+        <center><a href="{{route('courses.create')}}">Add new course</a></center>
+    </div>
+    @stop
