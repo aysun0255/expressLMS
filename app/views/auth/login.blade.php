@@ -14,5 +14,7 @@
                 {{$errors->first('error')}}
                 </br>
                 {{Form::submit('Login',['class' => 'btn btn-lg btn-primary btn-block'])}}
+                </br>
+                Forget your password? Recover your password from <a href="{{route('remind')}}">HERE</a>.
     {{Form::close()}}
 @stop

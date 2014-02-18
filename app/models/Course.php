@@ -14,11 +14,11 @@ class Course extends Eloquent {
     //Default validation rules
     public static $rules = [
         'name' => 'required|min:3',
-        'description' => 'required|between:3,500',
+        'description' => 'required|min:3',
     ];
 
     public function users() {
-        return $this->belongsToMany('User');
+        return $this->belongsToMany('User')->withPivot('role');
     }
 
     public function sections() {

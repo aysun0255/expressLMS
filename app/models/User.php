@@ -37,7 +37,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     protected $hidden = array('password');
 
     public function courses() {
-        return $this->belongsToMany('Course');
+        return $this->belongsToMany('Course')->withPivot('role');
     }
 
     public function messages() {

@@ -21,9 +21,15 @@ function getFileTypeIcon($mimetype) {
     $image = $mimetype == 'avi' ? '../images/filetypeicons/avi.png' : $image;
     return $image;
 }
+
+if ($course->users->contains(Auth::user()->id)) {
+    $userRole = $course->users()->whereId(Auth::user()->id)->first()->pivot->role;
+} else {
+    $userRole = 'student';
+}
 ?>
 <div class="well">
-   
+
     <div class="offer offer-default">
         <div class="shape">
             <div class="shape-text">
@@ -69,6 +75,8 @@ function getFileTypeIcon($mimetype) {
     <?php
     $files = $section->files;
     $contents = $section->contents;
+    $websites = $section->websites;
+    $assignments = $section->assignments;
     ?>
     <div class="offer offer-radius offer-primary">
         <div class="offer-content">
@@ -79,9 +87,9 @@ function getFileTypeIcon($mimetype) {
             <div class="right">
                 <a href ="{{route('sections.addfile',array($course->id,$section->id))}}" class="btn btn-info">Add file</a>
                 <a href ="{{route('content.add',array($course->id,$section->id))}}" class="btn btn-info">Add Content</a>
-                <a href ="#" class="btn btn-info"> Add homework</a>
+                <a href ="{{route('assignment.add',array($course->id,$section->id))}}" class="btn btn-info"> Add assignment</a>
                 <a href ="#" class="btn btn-info">Add test</a>
-                <a href ="#" class="btn btn-info">Add url</a>
+                <a href ="{{route('website.add',array($course->id,$section->id))}}" class="btn btn-info">Add web content</a>
                 <a href ="{{route('courses.sections.edit',array($course->id,$section->id))}}" class="btn btn-info">Edit</a>
                 @if($canDeleteSections =='yes')
                 {{Form::open(array('route' => array('courses.sections.destroy',$course->id,$section->id),'method'=>'delete','style' =>'display:inline;'))}}
@@ -95,10 +103,19 @@ function getFileTypeIcon($mimetype) {
                     @foreach($files as $file)
                 <h3>{{$file->pivot->title}}</h3>
                 <p>{{$file->pivot->description}}</p></br>
-                <a href="{{route('files.download',array($course->id,$file->id))}}"><img src ="{{getFileTypeIcon($file->mimetype)}}" width="35" height="35" />{{$file->filename}}</a><a href="{{route('files.remove',array($course->id,$section->id,$file->id))}}">  <img src="../images/remove.png" width="15" height="15" alt="Remove" /></a>
+                <a href="{{route('files.download',array($course->id,$file->id))}}"><img src ="{{getFileTypeIcon($file->mimetype)}}" width="35" height="35" />{{$file->filename}}</a>
+                @if($userRole == 'teacher')
+                <a href="{{route('files.remove',array($course->id,$section->id,$file->id))}}"><img src="../images/remove.png" width="15" height="15" alt="Remove" /></a>
+                @endif
                 @endforeach
                 @foreach($contents as $content)
-                </br><a href="{{route('content.show',array($course->id,$section->id,$content->id))}}"><img src ="../images/filetypeicons/content.png" width="35" height="35" />{{$content->title}}</a><img src="../images/remove.png" width="15" height="15" alt="Remove" />
+                </br><a href="{{route('content.show',array($course->id,$section->id,$content->id))}}"><img src ="../images/filetypeicons/content.png" width="35" height="35" />{{$content->title}}</a><a href="{{route('content.remove',array($course->id,$section->id,$content->id))}}"><img src="../images/remove.png" width="15" height="15" alt="Remove" /></a><a href="{{route('content.edit',array($course->id,$section->id,$content->id))}}"><img src="../images/edit.png" width="25" height="25" alt="Edit" /></a>
+                @endforeach
+                @foreach($websites as $website)
+                </br><a href="{{$website->link}}"><img src ="../images/filetypeicons/url.png" width="35" height="35" />{{$website->title}}</a><a href="{{route('website.remove',array($course->id,$section->id,$website->id))}}"><img src="../images/remove.png" width="15" height="15" alt="Remove" /></a><a href="{{route('website.edit',array($course->id,$section->id,$website->id))}}"><img src="../images/edit.png" width="25" height="25" alt="Edit" /></a>
+                @endforeach
+                @foreach($assignments as $assignment)
+                </br><a href="{{route('assignment.show',array($course->id,$section->id,$assignment->id))}}"><img src ="../images/filetypeicons/assignment.gif" width="35" height="35" />{{$assignment->name}}</a><a href="{{route('website.remove',array($course->id,$section->id,$website->id))}}"><img src="../images/remove.png" width="15" height="15" alt="Remove" /></a><a href="{{route('assignment.edit',array($course->id,$section->id,$assignment->id))}}"><img src="../images/edit.png" width="25" height="25" alt="Edit" /></a>
                 @endforeach
 
 

@@ -1,21 +1,42 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {{ HTML::style('css/bootstrap.css'); }}
+        {{ HTML::style('css/bootstrap-glyphicons.css');}}
         {{ HTML::style('css/bootstrap.min.css'); }}
+        {{ HTML::style('css/calendar.min.css'); }}
         {{ HTML::style('css/bootstrap-theme.css'); }}
         {{ HTML::style('css/bootstrap-theme.min.css'); }}
         {{ HTML::style('css/main.css'); }}
         {{ HTML::style('css/basic.css');}}
         {{ HTML::style('css/selectize.bootstrap3.css');}}
         {{ HTML::script('js/dropzone.js') }}
-        <script src="//code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
-        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        {{ HTML::script('js/jquery-1.10.2.min.js') }}
         {{ HTML::script('js/bootstrap.min.js') }}
         {{ HTML::script('js/bootstrap-datepicker.js') }}
         {{ HTML::style('css/datepicker.css');}}
-        {{ HTML::style('css/bootstrap-glyphicons.css');}}
+        {{ HTML::script('js/tinymce/tinymce.min.js') }}
+        <script src="js/bootstrap_calendar.min.js"></script>
+        <link href="css/bootstrap_calendar.css" rel="stylesheet">
 
+        <script type="text/javascript">
+            tinymce.init({
+                selector: ".tinyMCE",
+                theme: "modern",
+                plugins: [
+                    "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen",
+                    "insertdatetime media nonbreaking save table contextmenu directionality",
+                    "emoticons template paste textcolor"
+                ],
+                toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                toolbar2: "print preview media | forecolor backcolor emoticons",
+                image_advtab: true,
+                templates: [
+                    {title: 'Test template 1', content: 'Test 1'},
+                    {title: 'Test template 2', content: 'Test 2'}
+                ]
+            });
+        </script>
         {{ HTML::script('js/selectize.js') }}
         {{ HTML::script('js/typeahead.js') }}
 
@@ -37,17 +58,18 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active"><i class="icon-home icon-white"></i>{{link_to_route('home','Home')}}</li>
+                            <li class="active">{{link_to_route('home','Home')}}</li>
                             <li>{{link_to_route('users.index','Users')}}</li>
                             <?php
                             $courses = new Course;
                             $courses = $courses->whereCourse_category_id(0)->get()->all();
                             $categories = new CourseCategory;
                             $categories = $categories->get()->all();
-                            if(Auth::check()){
-                            $user = new User;
-                            $user = $user->whereId(Auth::user()->id)->first();
-                            $userCourses = $user->courses;}
+                            if (Auth::check()) {
+                                $user = new User;
+                                $user = $user->whereId(Auth::user()->id)->first();
+                                $userCourses = $user->courses;
+                            }
                             ?>
                             @if(Auth::check())
                             <li class="dropdown">
@@ -134,8 +156,14 @@
                                     @if(Auth::check())
                                     {{'Welcome back ',link_to_route('users.show', Auth::user()->username,[Auth::user()->username]);}}
                                     <a href="{{URL::to('/users/'.Auth::user()->username.'/edit')}}"><img src={{asset('images/preferences.png')}} width ="30"  height="30" alt="Logout"></a>
+                                    <a href="{{URL::to('/messages')}}"><img src={{asset('images/messages.png')}} width ="25"  height="25" alt="Logout"></a>
                                     <a href="{{URL::to('/logout')}}"><img src={{asset('images/logoutt.png')}} width ="20"  height="20" alt="Logout"></a>
-                                    @endif</p>
+                                    @else
+                                    You are not loged in.Please  <a href="{{URL::to('/login')}}">login</a> or  <a href="{{URL::to('/users/create')}}">sign-up</a>.
+                                    @endif
+
+
+                                </p>
                             </li>
                         </ul>
                     </div><!--/.nav-collapse -->
@@ -143,12 +171,22 @@
             </div>
         </nav>
         <div id="Container">
-            <div id="content">
-                <div class ='container'>
 
-                    @yield('content')
+            <div class ='container'>
+                {{ Breadcrumbs::render() }}
+                @if(Session::has('success'))
+                <div class="alert alert-success">
+                    <h2>{{ Session::get('success') }}</h2>
                 </div>
+                @endif
+                @if(Session::has('error'))
+                <div class="alert alert-danger">
+                    <h2>{{ Session::get('error') }}</h2>
+                </div>
+                @endif
+                @yield('content')
             </div>
+
 
         </div>
         <footer>

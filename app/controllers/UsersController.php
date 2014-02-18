@@ -77,6 +77,8 @@ class UsersController extends BaseController {
             'website' => 'url',
             'skype' => 'max:40',
             'about_me' => 'max:500',
+            'country' => 'max:70',
+            'city' => 'max:70',
         ];
         //Get the input
         $input = Input::all();
@@ -97,6 +99,8 @@ class UsersController extends BaseController {
         $user->birthday = Input::get('birthday');
         $user->email = Input::get('email');
         $user->about_me = Input::get('about_me');
+        $user->country = Input::get('country');
+        $user->city = Input::get('city');
         $user->skype = Input::get('skype');
         $user->twitter = Input::get('twitter');
         $user->facebook = Input::get('facebook');

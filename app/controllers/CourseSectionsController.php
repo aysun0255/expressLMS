@@ -38,15 +38,28 @@ class CourseSectionsController extends BaseController {
         }
     }
 
-    public function edit() {
-        //ddddd
+    public function edit($courseId, $sectionId) {
+        //show section edit form
+        //check for user permissions
+
+        $canEditSections = $this->hasPermission(Auth::user()->id, 'can_edit_sections');
+        if ($canEditSections == 'yes') {
+            // Locate the model and store it in a variable:
+            $course = Course::whereId($courseId)->first();
+            $section = $course->sections()->whereId($sectionId)->first();
+            // Then pass it to view:   
+            return View::make('sections.edit', ['course' => $course])->with(compact('section'));
+        } else {
+            //Return page with error message
+            return View::make('pages.message', ['error' => 'You don\'t have permission to edit this section!']);
+        }
     }
 
     public function update() {
         
     }
 
-    public function destroy($courseId,$sectionId) {
+    public function destroy($courseId, $sectionId) {
         $canDeleteSections = $this->hasPermission(Auth::user()->id, 'can_delete_sections');
         if ($canDeleteSections == 'yes') {
             $section = $this->section->whereId($sectionId)->first();

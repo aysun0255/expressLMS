@@ -92,5 +92,36 @@ class SearchController extends BaseController {
                     'data' => $data
         ));
     }
+    
+    public function user(){
+        $query = e(Input::get('q', ''));
+
+        if (!$query && $query == '')
+            return Response::json(array(), 400);
+
+        $users = User::where('username', 'like', '%' . $query . '%')
+                        ->orderBy('username', 'asc')
+                        ->take(5)
+                        ->get(array('id', 'username', 'avatar_id'))->toArray();
+
+       
+
+        // Data normalization'
+
+        $users = $this->appendUsername($users);
+        $users = $this->appendAvatar($users);
+        $users = $this->appendURL($users, 'users');
+        $users = $this->appendValue($users, 'user', 'class');
+        $users = $this->appendClassId($users, 'class_id');
+        
+
+
+        // Merge all data into one array
+        $data = $users;
+
+        return Response::json(array(
+                    'data' => $data
+        ));
+    }
 
 }
