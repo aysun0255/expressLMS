@@ -93,7 +93,18 @@ tinymce.init({
                                     @endforeach
                                 </ul>
                             </li>
-
+                            @if(Auth::check())
+                            <?php
+                            $usergroupId = Auth::user()->usergroup_id;
+                            $usergroup = Usergroup::whereId($usergroupId)->first();
+                            $isAdmin = $usergroup->is_admin;
+                            ?>
+                            @if($isAdmin == 'yes')
+                            <li>
+                               {{link_to_route('admincp',Lang::get('menu.admincp'))}}
+                            </li>
+                            @endif
+                           @endif
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li>

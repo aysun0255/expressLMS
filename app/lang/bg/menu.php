@@ -16,5 +16,5 @@ return array(
     "language" => "Език:",
     "allcourses" => "Всички курсове",
     "notlogged" => "Не сте влезнали в системата. Моля <a href=\"{{URL::to('/login')}}\">влезте</a> или <a href=\"{{URL::to('/users/create')}}\">се регистрирайте</a>.",
-	
+    "admincp" => "Администрация",
 );
