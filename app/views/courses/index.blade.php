@@ -20,10 +20,17 @@
             </br>
 
         </div></div>
-        @endforeach
+    @endforeach
 
-        {{$courses->links()}}
+    {{$courses->links()}}
 
-        <center><a href="{{route('courses.create')}}">Add new course</a></center>
-    </div>
-    @stop
+    <?php
+    $usergroupId = Auth::user()->usergroup_id;
+    $usergroup = Usergroup::whereId($usergroupId)->first();
+    $canCreateCourses = $usergroup->can_create_course;
+    ?>
+    @if($canCreateCourses == 'yes')
+    <center><a href="{{route('courses.create')}}">Add new course</a></center>
+    @endif
+</div>
+@stop

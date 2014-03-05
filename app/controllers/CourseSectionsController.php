@@ -18,7 +18,8 @@ class CourseSectionsController extends BaseController {
             //If user have permission show create form
             return View::make('sections.create', ['courseId' => $id]);
         } else {
-            return View::make('pages.message', ['error' => 'You dont have permission to add a lesson!']);
+            Session::flash('error', 'You don\'t have permission to add new section!');
+            return Redirect::route('courses.show', $id);
         }
     }
 
@@ -32,9 +33,11 @@ class CourseSectionsController extends BaseController {
             $this->section->visible = Input::get('visible');
             $this->section->course_id = Input::get('course_id');
             $this->section->save();
-            return View::make('pages.message', ['success' => 'You have successfully added new section!']);
+            Session::flash('success', 'You have successfully added new section!');
+            return Redirect::route('courses.index');
         } else {
-            return View::make('pages.message', ['error' => 'You dont have permission to add a section!']);
+            Session::flash('error', 'You don\'t have permission to add new section!');
+            return Redirect::route('courses.index');
         }
     }
 
@@ -51,12 +54,28 @@ class CourseSectionsController extends BaseController {
             return View::make('sections.edit', ['course' => $course])->with(compact('section'));
         } else {
             //Return page with error message
-            return View::make('pages.message', ['error' => 'You don\'t have permission to edit this section!']);
+            Session::flash('error', 'You don\'t have permission to edit this section!');
+            return Redirect::route('courses.show', $courseId);
         }
     }
 
     public function update() {
-        
+        //Get info for user permission for creating a new course
+        $canEditSections = $this->hasPermission(Auth::user()->id, 'can_edit_sections');
+        //Check for users permission to create course
+        if ($canEditSections == 'yes') {
+            $section = $this->section->whereId(Input::get('section_id'))->first();
+            $section->name = Input::get('name');
+            $section->description = Input::get('description');
+            $section->visible = Input::get('visible');
+            $section->course_id = Input::get('course_id');
+            $section->save();
+            Session::flash('success', 'You have successfuly edited selected section!');
+            return Redirect::route('courses.show', Input::get('course_id'));
+        } else {
+            Session::flash('error', 'You don\'t have permission to edit selected section !');
+            return Redirect::route('courses.show', Input::get('course_id'));
+        }
     }
 
     public function destroy($courseId, $sectionId) {
@@ -64,9 +83,11 @@ class CourseSectionsController extends BaseController {
         if ($canDeleteSections == 'yes') {
             $section = $this->section->whereId($sectionId)->first();
             $section->delete();
-            return View::make('pages.message', ['success' => 'You have deleted selected course!']);
+            Session::flash('success', 'You have deleted selected section!');
+            return Redirect::route('courses.index');
         } else {
-            return View::make('pages.message', ['error' => 'You dont have permission to delete a section!']);
+            Session::flash('error', 'You don\'t have permission to delete selected section!');
+            return Redirect::route('courses.index');
         }
     }
 

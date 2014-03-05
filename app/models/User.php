@@ -48,6 +48,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
         return $this->belongsTo('Usergroup');
     }
 
+    public function testResults() {
+        return $this->hasMany('TestResult');
+    }
+
+    public function userTestAnswers() {
+        return $this->hasMany('UserTestAnswer');
+    }
+
     /**
      * Get the unique identifier for the user.
      *

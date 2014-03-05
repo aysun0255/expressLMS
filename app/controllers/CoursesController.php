@@ -21,7 +21,7 @@ class CoursesController extends BaseController {
 
     public function index() {
         // list of all courses
-        $courses = $this->course->paginate(2);
+        $courses = $this->course->paginate(4);
         return View::make('courses.index', ['courses' => $courses]);
     }
 
@@ -46,7 +46,8 @@ class CoursesController extends BaseController {
             //If user have permission show create form
             return View::make('courses.create');
         } else {
-            return View::make('pages.message', ['error' => 'You dont have permission to create a new course!']);
+            Session::flash('error', 'You don\'t have permission to create a new course!');
+            return Redirect::route('courses.index');
         }
     }
 
@@ -68,10 +69,12 @@ class CoursesController extends BaseController {
             $this->course->enrolment_key = Input::get('enrolment_key');
             $this->course->save();
             $course = $this->course->whereId($this->course->id)->first();
-            $course->users()->attach(Auth::user()->id ,array('role' => 'teacher'));
-            return View::make('pages.message', ['success' => 'You have successfully created new course!']);
+            $course->users()->attach(Auth::user()->id, array('role' => 'teacher'));
+            Session::flash('success', 'You have successfully created new course!');
+            return Redirect::route('courses.show', $this->course->id);
         } else {
-            return View::make('pages.message', ['error' => 'You dont have permission to create a new course!']);
+            Session::flash('error', 'You don\'t have permission to create a new course!');
+            return Redirect::route('courses.index');
         }
     }
 
@@ -87,7 +90,8 @@ class CoursesController extends BaseController {
             return View::make('courses.edit')->with(compact('course'));
         } else {
             //Return page with error message
-            return View::make('pages.message', ['error' => 'You don\'t have permission to edit this course!']);
+            Session::flash('error', 'You don\'t have permission to edit this course!');
+            return Redirect::route('courses.show', $id);
         }
     }
 
@@ -108,16 +112,25 @@ class CoursesController extends BaseController {
             $course->use_key = Input::get('use_key');
             $course->enrolment_key = Input::get('enrolment_key');
             $course->save();
-            return View::make('pages.message', ['success' => 'Your changes have been saved!']);
+            Session::flash('success', 'Your changes have been saved!');
+            return Redirect::route('courses.show', $id);
         } else {
-            return View::make('pages.message', ['error' => 'You dont have permission to edit this course!']);
+            Session::flash('error', 'You don\'t have permission to edit this course!');
+            return Redirect::route('courses.show', $id);
         }
     }
 
     public function destroy($courseId) {
-        $course = $this->course->whereId($courseId)->first();
-        $course->delete();
-        return View::make('pages.message', ['success' => 'You have deleted selected course!']);
+        $canDeleteCourse = $this->hasPermission(Auth::user()->id, 'can_delete_courses');
+        if ($canDeleteCourse) {
+            $course = $this->course->whereId($courseId)->first();
+            $course->delete();
+            Session::flash('success', 'You have deleted selected course!');
+            return Redirect::route('courses.index');
+        } else {
+            Session::flash('error', 'You don\'t have  permission to delete selected course!');
+            return Redirect::route('courses.show', $courseId);
+        }
     }
 
     /*
@@ -130,7 +143,7 @@ class CoursesController extends BaseController {
         $users = Input::get('users');
         if (empty($users)) {
             if (($course->use_key == 'yes' && Input::get('enrolment_key') == $course->enrolment_key) || $course->use_key == 'no') {
-                $course->users()->attach(Auth::user()->id ,array('role' => 'student'));
+                $course->users()->attach(Auth::user()->id, array('role' => 'student'));
                 //Redirect to course page
                 return Redirect::route('courses.show', $courseId);
             } else {
@@ -141,7 +154,7 @@ class CoursesController extends BaseController {
                 $userPos = strpos($user, 'user_');
                 if ($userPos !== false) {
                     $userId = ltrim($user, "user_");
-                    $course->users()->attach($userId,array('role' => 'student'));
+                    $course->users()->attach($userId, array('role' => 'student'));
                 }
             }
             Session::flash('success', 'You added new users to course!');
@@ -164,4 +177,3 @@ class CoursesController extends BaseController {
     }
 
 }
-

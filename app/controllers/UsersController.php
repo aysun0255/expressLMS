@@ -24,10 +24,11 @@ class UsersController extends BaseController {
 
     public function create() {
         //Check if user has been loged in
-        if (Auth::check()) {
+        if (Auth::check() && $this->hasPermission(Auth::user()->id, 'is_admin') != 'yes') {
             //If user has loged in redirect to home page
             return Redirect::route('home');
         }
+     
         //Show signup form
         return View::make('users.create');
     }
@@ -44,13 +45,13 @@ class UsersController extends BaseController {
         $this->user->password = Hash::make(Input::get('password'));
         $this->user->save();
         //Redirect to the login page
-        return Redirect::route('login');
+            return Redirect::route('login');
     }
 
     public function edit($username) {
         //show user edit form
         //check for user permissions
-        $canEditUsers = $this->hasPermission(Auth::user()->id,'can_edit_users');
+        $canEditUsers = $this->hasPermission(Auth::user()->id, 'can_edit_users');
         if (Auth::user()->username == $username || $canEditUsers == 'yes') {
             // Locate the model and store it in a variable:
             $user = $this->user->whereUsername($username)->first();
@@ -59,7 +60,8 @@ class UsersController extends BaseController {
             return View::make('users.edit', ['title' => $formTitle])->with(compact('user'));
         } else {
             //Return page with error message
-            return View::make('pages.message', ['error' => 'You don\'t have permission to edit this user profile!']);
+            Session::flash('error', 'You don\'t have permission to edit this user profile!');
+            return Redirect::route('users.show', $username);
         }
     }
 
@@ -110,14 +112,21 @@ class UsersController extends BaseController {
         $user->save();
 
         //Return view with succes message
-        return View::make('pages.message', ['success' => 'You have successfuly updated your profile!']);
+        Session::flash('success', 'You have successfuly updated your profile!');
+        return Redirect::route('users.show', $username);
     }
 
     public function destroy($userId) {
-        $user = $this->user->whereId($userId)->first();
-        $user->delete();
-        return View::make('pages.message', ['success' => 'You have deleted selected user!']);
+        $canDeleteUsers = $this->hasPermission(Auth::user()->id, 'can_delete_users');
+        if (Auth::user()->id != $userId && $canDeleteUsers == 'yes') {
+            $user = $this->user->whereId($userId)->first();
+            $user->delete();
+            Session::flash('success', 'You have deleted selected user!');
+            return Redirect::route('users.index');
+        } else {
+            Session::flash('error', 'You don\'t have permission to delete this user profile!');
+            return Redirect::route('users.index');
+        }
     }
 
 }
-

@@ -95,6 +95,7 @@ return array(
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
+        'Schickling\Backup\BackupServiceProvider',
     ),
     /*
       |--------------------------------------------------------------------------

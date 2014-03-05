@@ -2,19 +2,19 @@
 
 @section('content')
     {{Form::open(array('class' => 'form-signin'))}}
-        {{Form::label('username','Username:'),
+        {{Form::label('username',Lang::get('login.username')),
                 Form::input('text','username',null,['class'=>'form-control'])}}
                 </br>
-                {{Form::label('password','Password:'),
+                {{Form::label('password',Lang::get('login.password')),
                 Form::input('password','password',null,['class'=>'form-control'])}}
                 </br>
                 {{Form::checkbox('remember','remember_me'),
-                Form::label('remember','Remember me')}}
+                Form::label('remember',Lang::get('login.rememberme'))}}
                 </br>
                 {{$errors->first('error')}}
                 </br>
-                {{Form::submit('Login',['class' => 'btn btn-lg btn-primary btn-block'])}}
+                {{Form::submit(Lang::get('login.login'),['class' => 'btn btn-lg btn-primary btn-block'])}}
                 </br>
-                Forget your password? Recover your password from <a href="{{route('remind')}}">HERE</a>.
+                {{Lang::get('login.forget')}}
     {{Form::close()}}
 @stop
