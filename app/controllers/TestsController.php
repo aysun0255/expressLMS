@@ -78,7 +78,7 @@ class TestsController extends BaseController {
 
     public function show($courseId, $sectionId, $testId) {
         $test = $this->test->whereId($testId)->first();
-        if ($test->max_attempts > count(TestResult::whereUser_id(Auth::user()->id)->get())) {
+        if ($test->max_attempts > count(TestResult::whereUser_id(Auth::user()->id)->whereTest_id($testId)->get())) {
             return View::make('tests.showTest', ['test' => $test, 'sectionId' => $sectionId, 'courseId' => $courseId]);
         } else {
             return View::make('tests.showTestResult', ['test' => $test, 'sectionId' => $sectionId, 'courseId' => $courseId]);

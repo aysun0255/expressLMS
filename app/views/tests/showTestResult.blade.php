@@ -20,9 +20,9 @@
             </br>
         <center>
             @if(!empty($attempt)
-            <h4>Your Result:{{TestResult::whereUser_id(Auth::user()->id)->whereAttempt($attempt)->first()->points}}/{{TestResult::whereUser_id(Auth::user()->id)->whereAttempt($attempt)->first()->max_points}}</h4>
+            <h4>Your Result:{{TestResult::whereUser_id(Auth::user()->id)->whereAttempt($attempt)->whereTest_id($testId)->first()->points}}/{{TestResult::whereUser_id(Auth::user()->id)->whereAttempt($attempt)->whereTest_id($testId)->first()->max_points}}</h4>
             @else
-            <h4>Your Result:{{TestResult::whereUser_id(Auth::user()->id)->orderBy('attempt', 'DESC')->first()->points}}/{{TestResult::whereUser_id(Auth::user()->id)->first()->max_points}}</h4>
+            <h4>Your Result:{{TestResult::whereUser_id(Auth::user()->id)->whereTest_id($testId)->orderBy('attempt', 'DESC')->first()->points}}/{{TestResult::whereUser_id(Auth::user()->id)->whereTest_id($testId)->first()->max_points}}</h4>
             @endif
             <h4>Your Answers:</h4>
         </center><ol>

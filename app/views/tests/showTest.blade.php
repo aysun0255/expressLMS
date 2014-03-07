@@ -19,7 +19,7 @@
             </br>
             <b>Max attempts:{{$test->max_attempts}}</b>
             </br>
-            <b>Attempts left:{{$test->max_attempts - count(TestResult::whereUser_id(Auth::user()->id)->get())}}</b>
+            <b>Attempts left:{{$test->max_attempts - count(TestResult::whereUser_id(Auth::user()->id)->whereTest_id($test->id)->get())}}</b>
             </br>
             <b>Time due:{{$test->timedue}}</b>
             @if(($test->max_attempts - count(TestResult::whereUser_id(Auth::user()->id)->get())) != $test->max_attempts)
